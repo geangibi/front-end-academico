@@ -69,8 +69,7 @@ Siga os passos abaixo para rodar o projeto localmente:
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git](https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git)
-    cd NOME_DO_REPOSITORIO
+    git clone https://github.com/geangibi/front-end-academico.git
     ```
 
 2.  **Instale as dependências:**
@@ -85,8 +84,6 @@ Siga os passos abaixo para rodar o projeto localmente:
     ```bash
     npm run dev
     ```
-
-5.  Abra seu navegador e acesse `http://localhost:5173` (ou a porta indicada no seu terminal).
 
 ---
 
