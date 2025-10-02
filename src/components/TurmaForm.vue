@@ -1,0 +1,223 @@
+<template>
+  <div class="card-moderno" data-aos="fade-up">
+    <div class="card-body">
+      <h2 class="card-title text-center mb-4">
+        <i class="fas fa-chalkboard-teacher me-2"></i>
+        Cadastrar Turma
+      </h2>
+      <form @submit.prevent="cadastrar">
+
+        <div class="form-row">
+          <div class="input-group mb-3" data-aos="fade-up" data-aos-delay="100">
+            <i class="fas fa-barcode input-icon"></i>
+            <input v-model="turma.codigo" placeholder="Código da Turma" class="form-control-moderno" required>
+          </div>
+
+          <div class="input-group mb-3" data-aos="fade-up" data-aos-delay="200">
+            <i class="fas fa-clock input-icon"></i>
+            <input v-model="turma.turno" placeholder="Turno (Ex: Manhã)" class="form-control-moderno" required>
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="input-group mb-3" data-aos="fade-up" data-aos-delay="300">
+            <i class="fas fa-calendar-alt input-icon"></i>
+            <input type="date" v-model="turma.inicio" class="form-control-moderno" required title="Data de Início">
+          </div>
+
+          <div class="input-group mb-3" data-aos="fade-up" data-aos-delay="400">
+            <i class="fas fa-calendar-check input-icon"></i>
+            <input type="date" v-model="turma.fim" class="form-control-moderno" required title="Data de Fim">
+          </div>
+        </div>
+
+        <div class="select-group mb-4" data-aos="fade-up" data-aos-delay="500">
+          <i class="fas fa-book input-icon"></i>
+          <select v-model="turma.cursoId" class="form-select-moderno" required>
+            <option disabled value="">Selecione o curso</option>
+            <option v-for="c in cursos" :value="c.id" :key="c.id">{{ c.nome }}</option>
+          </select>
+        </div>
+
+        <button class="btn-submit w-100" data-aos="zoom-in" data-aos-delay="600">
+          <i class="fas fa-plus-circle me-2"></i>
+          Cadastrar Turma
+        </button>
+      </form>
+    </div>
+  </div>
+</template>
+
+<script>
+import Swal from 'sweetalert2';
+import AOS from 'aos';
+import { getCursos, createTurma } from '../services/api';
+
+export default {
+  data() {
+    return {
+      cursos: [],
+      turma: { codigo: "", inicio: "", fim: "", turno: "", cursoId: "" }
+    };
+  },
+  async mounted() {
+    try {
+      this.cursos = await getCursos();
+    } catch (error) {
+      console.error("Falha ao buscar cursos:", error);
+    } finally {
+      this.$nextTick(() => {
+        AOS.refresh();
+      });
+    }
+  },
+  methods: {
+    async cadastrar() {
+      try {
+        await createTurma(this.turma);
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso!",
+          text: "Turma cadastrada com sucesso.",
+          background: '#1e1e2f',
+          color: '#fff',
+          confirmButtonColor: '#4f46e5'
+        });
+        this.turma = { codigo: "", inicio: "", fim: "", turno: "", cursoId: "" };
+        this.$emit("turma-cadastrada");
+      } catch (err) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Falha ao cadastrar a turma.",
+          background: '#1e1e2f',
+          color: '#fff',
+          confirmButtonColor: '#4f46e5'
+        });
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+/* Estilo unificado do card "Glassmorphism" */
+.card-moderno {
+  background: rgba(30, 30, 47, 0.75);
+  border-radius: 1rem;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.card-title {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Container para agrupar campos lado a lado */
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.form-row > * {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Grupo de Input com Ícone */
+.input-group, .select-group {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  transition: color 0.3s ease;
+  z-index: 1;
+}
+
+.form-control-moderno, .form-select-moderno {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  padding: 0.9rem 0.9rem 0.9rem 3rem;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control-moderno:focus, .form-select-moderno:focus {
+  background-color: rgba(0, 0, 0, 0.3);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(80, 130, 255, 0.5);
+  border-color: #5082ff;
+}
+
+.form-control-moderno:focus ~ .input-icon,
+.select-group:focus-within .input-icon {
+  color: #5082ff;
+}
+
+/* Estilização específica para input de data */
+.form-control-moderno[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.6) brightness(1.2);
+  cursor: pointer;
+}
+
+/* Estilo para <select> */
+.select-group::after {
+  content: '\f078';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.select-group:focus-within::after {
+  color: #5082ff;
+}
+
+.form-select-moderno {
+  padding-right: 2.5rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.form-select-moderno option {
+  background-color: #1e1e2f;
+  color: #fff;
+}
+
+/* Botão de Cadastro */
+.btn-submit {
+  background: linear-gradient(45deg, #4f46e5, #7c3aed);
+  color: #fff;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-submit:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+</style>
