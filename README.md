@@ -8,8 +8,11 @@ Este repositório contém o código-fonte do frontend para um Sistema de Gerenci
 
 É altamente recomendado adicionar uma imagem ou GIF aqui para mostrar o resultado final.
 
-![Demonstração do Sistema Acadêmico](URL_DA_SUA_IMAGEM_OU_GIF_AQUI)
-*(Substitua o link acima pela URL de uma imagem ou GIF do seu projeto funcionando)*
+![Demonstração do Sistema Acadêmico]
+
+![academico-front-end](https://github.com/user-attachments/assets/5a1dd3c0-3b2b-41f3-9f55-fff70f30ec94)
+
+
 
 ---
 
